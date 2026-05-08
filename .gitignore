@@ -1,0 +1,15 @@
+# Binaries
+c/*_arm
+go/webserver_armv5
+go/webserver_armv6
+go/webserver_armv7
+
+# Python
+__pycache__/
+*.pyc
+
+# Config
+.claude/settings.local.json
+
+# Temp
+*.o
