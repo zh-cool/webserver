@@ -13,3 +13,6 @@ __pycache__/
 
 # Temp
 *.o
+
+# Local x86 build
+webserver_local

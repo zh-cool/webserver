@@ -59,60 +59,66 @@ static const char *s_page_html =
 	"</script></body></html>";
 
 static const char *s_led_html = "<!DOCTYPE html>\n"
-				"<html><head><meta charset=\"utf-8\">\n"
-				"<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n"
-				"<title>LED Control</title>\n"
-				"<style>\n"
-				"*{box-sizing:border-box}\n"
-				"body{font-family:system-ui,sans-serif;max-width:800px;margin:0 auto;padding:20px;background:#f5f5f5}\n"
-				"h1{color:#333}.card{background:#fff;padding:20px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,0.1);margin-bottom:20px}\n"
-				"label{display:inline-block;width:80px;font-weight:bold}\n"
-				"select{width:140px;padding:6px;margin:5px 0;border-radius:4px}\n"
-				"button{background:#4f46e5;color:#fff;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;margin-top:10px}\n"
-				"button:hover{background:#4338ca}\n"
-				"#st{white-space:pre-wrap;font-family:monospace;margin-top:10px}\n"
-				"a.home{color:#4f46e5}\n"
-				"</style></head><body>\n"
-				"<h1>LED Control</h1>\n"
-				"<div class=\"card\">\n"
-				"<p id=\"cur\">%s</p>\n"
-				"<label>Wan:</label>\n"
-				"<select id=\"wan\">\n"
-				"<option value=\"1\">Off</option><option value=\"2\">On</option>\n"
-				"<option value=\"3\">Slow Flash</option><option value=\"4\">Fast Flash</option>\n"
-				"<option value=\"15\">Keep</option></select><br>\n"
-				"<label>Lan:</label>\n"
-				"<select id=\"lan\">\n"
-				"<option value=\"1\">Off</option><option value=\"2\">On</option>\n"
-				"<option value=\"3\">Slow Flash</option><option value=\"4\">Fast Flash</option>\n"
-				"<option value=\"15\">Keep</option></select><br>\n"
-				"<label>Wifi:</label>\n"
-				"<select id=\"wifi\">\n"
-				"<option value=\"1\">Off</option><option value=\"2\">On</option>\n"
-				"<option value=\"3\">Slow Flash</option><option value=\"4\">Fast Flash</option>\n"
-				"<option value=\"15\">Keep</option></select><br>\n"
-				"<button onclick=\"setled()\">Set LEDs</button>\n"
-				"<div id=\"st\"></div></div>\n"
-				"<p><a class=\"home\" href=\"/\">Back</a></p>\n"
-				"<script>\n"
-				"function sel(id,v){document.getElementById(id).value=v}\n"
-				"sel('wan',%d);sel('lan',%d);sel('wifi',%d);\n"
-				"async function setled(){const r=await fetch('/led',{method:'POST',"
-				"headers:{'Content-Type':'application/json'},"
-				"body:JSON.stringify({wan:+wan.value,lan:+lan.value,wifi:+wifi.value})});"
-				"const d=await r.json();"
-				"document.getElementById('st').textContent=r.ok?JSON.stringify(d):d.error;"
-				"document.getElementById('cur').textContent="
-				"'Wan='+d.wan+' Lan='+d.lan+' Wifi='+d.wifi;"
-				"sel('wan',d.wan);sel('lan',d.lan);sel('wifi',d.wifi)}\n"
-				"</script></body></html>";
+					"<html><head><meta charset=\"utf-8\">\n"
+					"<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n"
+					"<title>LED Control</title>\n"
+					"<style>\n"
+					"*{box-sizing:border-box;margin:0;padding:0}\n"
+					"body{font-family:system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1a1a2e;color:#e0e0e0}\n"
+					"h1{font-size:1.5rem;margin-bottom:2rem;color:#eee;letter-spacing:1px}\n"
+					".leds{display:flex;gap:3rem;align-items:center}\n"
+					".led{display:flex;flex-direction:column;align-items:center;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}\n"
+					".bulb{width:80px;height:80px;border-radius:50%;border:3px solid #444;background:radial-gradient(circle at 35%% 35%%,#3a3a3a,#222);transition:all .3s ease;position:relative}\n"
+					".bulb.on{background:radial-gradient(circle at 35%% 35%%,#fff,#f5d742);border-color:#f5d742;box-shadow:0 0 20px 8px rgba(245,215,66,.5),0 0 60px 20px rgba(245,215,66,.2)}\n"
+					".bulb.slow{animation:fls 1.5s infinite}\n"
+					".bulb.fast{animation:fls .4s infinite}\n"
+					"@keyframes fls{0%%,100%%{background:radial-gradient(circle at 35%% 35%%,#3a3a3a,#222);border-color:#444;box-shadow:none}50%%{background:radial-gradient(circle at 35%% 35%%,#fff,#f5d742);border-color:#f5d742;box-shadow:0 0 20px 8px rgba(245,215,66,.5),0 0 60px 20px rgba(245,215,66,.2)}}\n"
+					".name{margin-top:.8rem;font-size:.95rem;font-weight:600;color:#aaa}\n"
+					".state{font-size:.75rem;color:#666;margin-top:.2rem;min-height:1.1em}\n"
+					"a.home{position:fixed;top:1rem;left:1rem;color:#666;font-size:.8rem;text-decoration:none}a.home:hover{color:#aaa}\n"
+					"</style></head><body>\n"
+					"<a class=\"home\" href=\"/\">&#8592; Back</a>\n"
+					"<h1>LED Control</h1>\n"
+					"<div class=\"leds\">\n"
+					"<div class=\"led\" onclick=\"toggle('wan')\">"
+					"<div class=\"bulb\" id=\"b-wan\"></div>"
+					"<div class=\"name\">WAN</div>"
+					"<div class=\"state\" id=\"s-wan\">Off</div></div>\n"
+					"<div class=\"led\" onclick=\"toggle('lan')\">"
+					"<div class=\"bulb\" id=\"b-lan\"></div>"
+					"<div class=\"name\">LAN</div>"
+					"<div class=\"state\" id=\"s-lan\">Off</div></div>\n"
+					"<div class=\"led\" onclick=\"toggle('wifi')\">"
+					"<div class=\"bulb\" id=\"b-wifi\"></div>"
+					"<div class=\"name\">WIFI</div>"
+					"<div class=\"state\" id=\"s-wifi\">Off</div></div>\n"
+					"</div>\n"
+					"<script>\n"
+					"var S={wan:%d,lan:%d,wifi:%d};\n"
+					"var NM={1:'Off',2:'On',3:'Slow Flash',4:'Fast Flash',15:'Keep'};\n"
+					"function upd(i){var b=document.getElementById('b-'+i),"
+					"s=document.getElementById('s-'+i);"
+					"b.className='bulb'+(S[i]===2?' on':S[i]===3?' slow':S[i]===4?' fast':'');"
+					"s.textContent=NM[S[i]]||'Unknown'}\n"
+					"upd('wan');upd('lan');upd('wifi');\n"
+					"function toggle(i){S[i]=S[i]===1?2:1;send(i)}\n"
+					"async function send(changed){"
+					"upd(changed);\n"
+					"var r=await fetch('/led',{method:'POST',"
+					"headers:{'Content-Type':'application/json'},"
+					"body:JSON.stringify({wan:S.wan,lan:S.lan,wifi:S.wifi})});"
+					"var d=await r.json();\n"
+					"S.wan=d.wan;S.lan=d.lan;S.wifi=d.wifi;\n"
+					"upd('wan');upd('lan');upd('wifi');\n"
+					"}\n"
+					"</script></body></html>";
 
 /* ---------- LED helper ---------- */
 
 /* Last known state, init as 'unknown' (0 = not set yet) */
-static enum rl_led_state s_last_wan = RL_KEEP;
-static enum rl_led_state s_last_lan = RL_KEEP;
-static enum rl_led_state s_last_wifi = RL_KEEP;
+static enum rl_led_state s_last_wan = RL_OFF;
+static enum rl_led_state s_last_lan = RL_OFF;
+static enum rl_led_state s_last_wifi = RL_OFF;
 
 static enum rl_led_state parse_led_val(int v)
 {
@@ -369,15 +375,11 @@ static void handle_led(struct mg_connection *c, struct mg_http_message *hm)
 	}
 
 	/* GET /led — serve HTML page */
-	char result[256];
 	enum rl_led_state wan = s_last_wan;
 	enum rl_led_state lan = s_last_lan;
 	enum rl_led_state wifi = s_last_wifi;
-	snprintf(result, sizeof(result), "Wan=%s Lan=%s Wifi=%s", led_name(wan), led_name(lan), led_name(wifi));
 
-	char page[4096];
-	snprintf(page, sizeof(page), s_led_html, result, (int)wan, (int)lan, (int)wifi);
-	mg_http_reply(c, 200, "Content-Type: text/html\r\n", "%s", page);
+	mg_http_reply(c, 200, "Content-Type: text/html\r\n", s_led_html, (int)wan, (int)lan, (int)wifi);
 }
 
 /* ---------- Main ---------- */
