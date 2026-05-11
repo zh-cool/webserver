@@ -119,22 +119,36 @@ RX: A5 5A 04 81 00 0F F4 87    ← 回复
 ## 编译
 
 ```bash
-# 进入 c/ 目录后编译
+# LED 控制服务器（端口 8080）
 cd c
-make webserver_arm       # Web 服务器（ARM）
-make led_auto_test_arm   # LED 交互测试
-make led_test_arm        # LED 简单测试
+make webserver_arm
+
+# Web 管理界面（端口 8080，前后端重写版）
+cd server
+make admin_server_arm
 ```
 
 ## 目录结构
 
 ```
 ├── c/            C + Mongoose 实现
-│   ├── main.c          HTTP 服务器
+│   ├── main.c          LED 控制 HTTP 服务器
 │   ├── mongoose.h/c    Mongoose 库
 │   ├── router_led.h/c  LED 灯控协议
 │   ├── led_auto_test.c LED 交互测试
 │   └── led_browser_test.py  浏览器自动化测试
+├── server/       Web 管理界面（前后端重写）
+│   ├── server.c        REST API + 静态文件服务
+│   └── Makefile
+├── web/          前端页面（部署到板子 /web/）
+│   ├── index.html      总框架
+│   ├── dashboard.html  仪表盘
+│   ├── wifi.html       WiFi 设置
+│   ├── network.html    网络设置
+│   ├── led.html        LED 控制
+│   ├── system.html     系统管理
+│   ├── css/style.css   样式
+│   └── js/api.js       API 封装
 ├── go/           Go 版本（存档）
 └── README.md
 ```

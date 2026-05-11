@@ -1,5 +1,5 @@
-#include "mongoose.h"
-#include "router_led.h"
+#include "../c/mongoose.h"
+#include "../c/router_led.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

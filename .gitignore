@@ -1,5 +1,6 @@
 # Binaries
 c/*_arm
+server/*_arm
 go/webserver_armv5
 go/webserver_armv6
 go/webserver_armv7
