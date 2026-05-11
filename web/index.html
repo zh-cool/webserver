@@ -20,6 +20,11 @@ var navs=document.querySelectorAll('.nav');
 function load(page){
   fetch('/web/'+page+'.html').then(r=>r.text()).then(html=>{
     document.getElementById('content').innerHTML=html;
+    document.querySelectorAll('#content script').forEach(function(s){
+      var ns=document.createElement('script');
+      if(s.src){ns.src=s.src}else{ns.textContent=s.textContent}
+      s.parentNode.replaceChild(ns,s);
+    });
     navs.forEach(function(n){n.classList.toggle('active',n.dataset.page===page)});
     if(typeof onPage==='function') onPage(page);
   });
