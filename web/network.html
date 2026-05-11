@@ -1,0 +1,15 @@
+<h2>Network</h2>
+<div class="card"><h2>LAN Settings</h2>
+  <label>IP Address</label><input id="ip" placeholder="192.168.11.1">
+  <label>Netmask</label><input id="mask" placeholder="255.255.255.0">
+  <label>DHCP Range</label><input id="dhcp" placeholder="192.168.11.2,192.168.11.254">
+  <button onclick="saveNet()">Save</button>
+</div>
+<script>
+get('/api/network').then(function(d){
+  document.getElementById('ip').value=d.lan_ip;
+  document.getElementById('mask').value=d.netmask;
+  document.getElementById('dhcp').value=d.dhcp_start;
+});
+function saveNet(){post('/api/network',{}).then(function(d){toast(d.status)})}
+</script>

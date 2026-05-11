@@ -1,0 +1,24 @@
+<h2>System</h2>
+<div class="card"><h2>Actions</h2>
+  <button class="danger" onclick="reboot()" style="margin-right:1rem">Reboot</button>
+  <button class="danger" onclick="reset()">Factory Reset</button>
+</div>
+<div class="card"><h2>Firmware Upgrade</h2>
+  <form id="fm" enctype="multipart/form-data">
+    <input type="file" name="fw" id="fw" style="width:auto">
+    <button type="submit">Upgrade</button>
+  </form>
+  <div id="ust"></div>
+</div>
+<script>
+function reboot(){if(confirm('Reboot the device?'))post('/api/system/reboot',{}).then(function(d){toast(d.status)})}
+function reset(){if(confirm('Factory reset? ALL settings will be lost!'))post('/api/system/reset',{}).then(function(d){toast(d.status)})}
+document.getElementById('fm').onsubmit=async function(e){
+  e.preventDefault();
+  var st=document.getElementById('ust');
+  st.textContent='Uploading...';
+  var fd=new FormData();fd.append('file',document.getElementById('fw').files[0]);
+  var r=await fetch('/api/upload',{method:'POST',body:fd});
+  st.textContent=r.ok?'Uploaded. Reboot to apply.':'Error';
+};
+</script>

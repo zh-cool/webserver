@@ -1,0 +1,16 @@
+<h2>Dashboard</h2>
+<div class="stats" id="st"></div>
+<div class="card"><h2>Online Devices</h2><table><thead><tr><th>IP</th><th>MAC</th></tr></thead><tbody id="devs"></tbody></table></div>
+<script>
+get('/api/status').then(function(d){
+  var up=parseInt(d.uptime),dd=Math.floor(up/86400),hh=Math.floor((up%86400)/3600),mm=Math.floor((up%3600)/60);
+  document.getElementById('st').innerHTML=
+    '<div class="stat"><div class="val">'+dd+'d '+hh+'h</div><div class="lbl">Uptime</div></div>'+
+    '<div class="stat"><div class="val">'+(parseInt(d.mem_total)/1024).toFixed(0)+'MB</div><div class="lbl">Total Memory</div></div>'+
+    '<div class="stat"><div class="val">'+(parseInt(d.mem_free)/1024).toFixed(0)+'MB</div><div class="lbl">Free Memory</div></div>'+
+    '<div class="stat"><div class="val">'+d.hostname+'</div><div class="lbl">Hostname</div></div>';
+});
+get('/api/devices').then(function(d){
+  document.getElementById('devs').innerHTML=d.length?d.map(function(x){return '<tr><td>'+x.ip+'</td><td>'+x.mac+'</td></tr>'}).join(''):'<tr><td colspan="2">No devices</td></tr>';
+});
+</script>

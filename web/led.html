@@ -1,0 +1,48 @@
+<h2>LED Control</h2>
+<style>
+.bulbs{display:flex;gap:3rem;align-items:center;justify-content:center;padding:2rem 0}
+.led-item{display:flex;flex-direction:column;align-items:center;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.bulb{width:80px;height:80px;border-radius:50%;border:3px solid #444;background:radial-gradient(circle at 35% 35%,#3a3a3a,#222);transition:all .3s ease;position:relative}
+.bulb.on{background:radial-gradient(circle at 35% 35%,#fff,#f5d742);border-color:#f5d742;box-shadow:0 0 20px 8px rgba(245,215,66,.5),0 0 60px 20px rgba(245,215,66,.2)}
+.bulb.slow{animation:fls .5s infinite}.bulb.fast{animation:fls .25s infinite}
+@keyframes fls{0%,100%{background:radial-gradient(circle at 35% 35%,#3a3a3a,#222);border-color:#444;box-shadow:none}50%{background:radial-gradient(circle at 35% 35%,#fff,#f5d742);border-color:#f5d742;box-shadow:0 0 20px 8px rgba(245,215,66,.5),0 0 60px 20px rgba(245,215,66,.2)}}
+.name{margin-top:.8rem;font-size:.95rem;font-weight:600;color:#aaa}
+.state{font-size:.75rem;color:#666;margin-top:.2rem;min-height:1.1em}
+</style>
+<div class="bulbs">
+  <div class="led-item" onclick="toggle('wan')">
+    <div class="bulb" id="b-wan"></div>
+    <div class="name">WAN</div>
+    <div class="state" id="s-wan">Off</div>
+  </div>
+  <div class="led-item" onclick="toggle('lan')">
+    <div class="bulb" id="b-lan"></div>
+    <div class="name">LAN</div>
+    <div class="state" id="s-lan">Off</div>
+  </div>
+  <div class="led-item" onclick="toggle('wifi')">
+    <div class="bulb" id="b-wifi"></div>
+    <div class="name">WIFI</div>
+    <div class="state" id="s-wifi">Off</div>
+  </div>
+</div>
+<script>
+var S={wan:1,lan:1,wifi:1},NM={1:'Off',2:'On',3:'Slow Flash',4:'Fast Flash',15:'Keep'};
+function upd(i){
+  var b=document.getElementById('b-'+i),s=document.getElementById('s-'+i);
+  b.className='bulb'+(S[i]===2?' on':S[i]===3?' slow':S[i]===4?' fast':'');
+  s.textContent=NM[S[i]]||'Unknown';
+}
+get('/api/led').then(function(d){
+  S.wan=d.wan;S.lan=d.lan;S.wifi=d.wifi;
+  upd('wan');upd('lan');upd('wifi');
+});
+function toggle(i){S[i]=S[i]%4+1;send(i)}
+function send(i){
+  upd(i);
+  post('/api/led',{wan:S.wan,lan:S.lan,wifi:S.wifi}).then(function(d){
+    S.wan=d.wan;S.lan=d.lan;S.wifi=d.wifi;
+    upd('wan');upd('lan');upd('wifi');
+  });
+}
+</script>

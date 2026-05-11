@@ -1,0 +1,22 @@
+<h2>WiFi Settings</h2>
+<div class="card"><h2>2.4GHz</h2>
+  <label>SSID</label><input id="s24" placeholder="SSID">
+  <label>Password</label><input id="p24" type="password" placeholder="WPA password">
+  <label>Channel</label><input id="c24" placeholder="Auto">
+  <button onclick="saveWifi('24')">Save 2.4G</button>
+</div>
+<div class="card"><h2>5GHz</h2>
+  <label>SSID</label><input id="s5" placeholder="SSID">
+  <label>Password</label><input id="p5" type="password" placeholder="WPA password">
+  <label>Channel</label><input id="c5" placeholder="Auto">
+  <button onclick="saveWifi('5')">Save 5G</button>
+</div>
+<script>
+get('/api/wifi').then(function(d){
+  document.getElementById('s24').value=d.wifi24.ssid.trim();
+  document.getElementById('c24').value=d.wifi24.channel;
+  document.getElementById('s5').value=d.wifi5.ssid.trim();
+  document.getElementById('c5').value=d.wifi5.channel;
+});
+function saveWifi(b){post('/api/wifi',{}).then(function(d){toast(d.status)})}
+</script>

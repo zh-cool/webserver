@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gateway Management</title>
+<link rel="stylesheet" href="/web/css/style.css">
+</head><body>
+<div class="sidebar">
+  <div class="logo">Gateway Admin</div>
+  <a href="/web/dashboard.html" class="nav active" data-page="dashboard">Dashboard</a>
+  <a href="/web/wifi.html" class="nav" data-page="wifi">WiFi Settings</a>
+  <a href="/web/network.html" class="nav" data-page="network">Network</a>
+  <a href="/web/led.html" class="nav" data-page="led">LED Control</a>
+  <a href="/web/system.html" class="nav" data-page="system">System</a>
+</div>
+<div class="main" id="content"></div>
+<script src="/web/js/api.js"></script>
+<script>
+API='';
+var navs=document.querySelectorAll('.nav');
+function load(page){
+  fetch('/web/'+page+'.html').then(r=>r.text()).then(html=>{
+    document.getElementById('content').innerHTML=html;
+    navs.forEach(function(n){n.classList.toggle('active',n.dataset.page===page)});
+    if(typeof onPage==='function') onPage(page);
+  });
+}
+navs.forEach(function(n){n.onclick=function(e){e.preventDefault();load(n.dataset.page)}});
+load('dashboard');
+</script>
+</body></html>

@@ -1,0 +1,31 @@
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;display:flex;min-height:100vh;background:#1a1a2e;color:#e0e0e0}
+.sidebar{width:220px;background:#16213e;padding:1.5rem 0;display:flex;flex-direction:column;flex-shrink:0}
+.sidebar .logo{padding:0 1.5rem 1.5rem;font-size:1.1rem;font-weight:700;color:#fff;border-bottom:1px solid #2a3a5e;margin-bottom:.5rem}
+.sidebar a{display:block;padding:.7rem 1.5rem;color:#8892b0;text-decoration:none;font-size:.9rem;transition:all .2s}
+.sidebar a:hover,.sidebar a.active{color:#fff;background:rgba(255,255,255,0.05);border-left:3px solid #4f46e5}
+.main{flex:1;padding:2rem;overflow-y:auto}
+.card{background:#16213e;border-radius:10px;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.card h2{font-size:1.1rem;color:#fff;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid #2a3a5e}
+.card h3{font-size:.85rem;color:#8892b0;margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.5px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+.stat{background:#0f3460;padding:1rem;border-radius:8px;text-align:center}
+.stat .val{font-size:2rem;font-weight:700;color:#f5d742}
+.stat .lbl{font-size:.8rem;color:#8892b0;margin-top:.3rem}
+table{width:100%;border-collapse:collapse}
+th,td{padding:.6rem .8rem;text-align:left;font-size:.85rem}
+th{color:#8892b0;border-bottom:2px solid #2a3a5e}
+td{border-bottom:1px solid #1a2a4e}
+input,select{width:100%;padding:.6rem;margin:.4rem 0 1rem;border-radius:6px;border:1px solid #2a3a5e;background:#0f3460;color:#e0e0e0;font-size:.9rem}
+input:focus,select:focus{outline:none;border-color:#4f46e5}
+label{font-size:.85rem;color:#8892b0}
+button{background:#4f46e5;color:#fff;border:none;padding:.6rem 1.5rem;border-radius:6px;cursor:pointer;font-size:.9rem;transition:.2s}
+button:hover{background:#4338ca}
+button.danger{background:#dc2626}
+button.danger:hover{background:#b91c1c}
+.row{display:flex;gap:1rem;align-items:center}
+.row label{flex-shrink:0;min-width:80px}
+.tag{display:inline-block;padding:.2rem .6rem;border-radius:4px;font-size:.75rem;background:#0f3460;color:#f5d742}
+.toast{position:fixed;top:1rem;right:1rem;background:#333;color:#0f0;padding:.5rem 1.2rem;border-radius:6px;font-size:.85rem;opacity:0;transition:opacity .3s;z-index:999}
+.toast.show{opacity:1}
+.spin{animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
